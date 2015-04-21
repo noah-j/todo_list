@@ -2,18 +2,22 @@
 
 from Tkinter import *
 import pickle
+import os
 
 class List(Tk):
 
     task_dict = {}
     task_list = []
     num_tasks = 0
+
     def __init__(self,master):
         td_frame = Frame(master)
         td_frame.grid()
 
+        if not os.path.exists('listpersist.txt'):
+            List.txt_create(self)
         try:
-            saved_file = open(r'C:\pythondir\todolist\listpersist.txt','rb')
+            saved_file = open(r'listpersist.txt','rb')
             build_list = pickle.load(saved_file)
             saved_file.close()
             for key in build_list:
@@ -21,7 +25,6 @@ class List(Tk):
                 List.add_task(self,value,td_frame)
         except EOFError:
             print 'no previous save'
-
 
 
 
@@ -59,10 +62,18 @@ class List(Tk):
             key_counter += 1
         #print List.task_dict
 
-        save_file = open(r'C:\pythondir\todolist\listpersist.txt','wb')
+        save_file = open(r'listpersist.txt','wb')
         save_file.truncate()
         pickle.dump(List.task_dict,save_file)
         save_file.close()
+
+    def txt_create(self):
+
+        save_file = 'listpersist.txt'
+        list_persist = open(save_file, 'a')
+        list_persist.close()
+
+
 
 
 root = Tk()
