@@ -3,6 +3,7 @@
 from Tkinter import *
 import pickle
 import os
+from task import Task
 
 class List(Tk):
 
@@ -10,10 +11,12 @@ class List(Tk):
     task_list = []
     num_tasks = 0
 
+
     def __init__(self,master):
         td_frame = Frame(master)
         td_frame.grid()
-
+        button_frame = Frame(master)
+        button_frame.grid()
         if not os.path.exists('listpersist.txt'):
             List.txt_create(self)
         try:
@@ -32,47 +35,58 @@ class List(Tk):
         task_input = Entry(master)
         task_input.grid()
         add_button = Button(master,text='add task',command=lambda:
-                            self.add_task(task_input.get(),td_frame))
+                        self.create_task_object(task_input.get(),button_frame))
         add_button.grid()
         master.bind("<Return>",lambda a:List.add_task(self,task_input.get(),
-                                             td_frame))
+                                             button_frame))
         save_button = Button(master, text='save',command=lambda:
                              self.save_tasks())
         save_button.grid()
 
-    def add_task(self,task_ID,frame):
-        List.num_tasks+=1
+    def create_task_object(self,task_ID,frame):
+        #List.num_tasks+=1
 
-        single_task = Checkbutton(frame,text=task_ID,command=lambda:
-                                  self.remove_task(single_task,frame,task_ID))
+        new_task = Task(task_ID)
+        self.add_task(new_task,frame)
+        List.task_list.append(new_task)
+
+    def add_task(self,task_object,frame):
+        List.num_tasks += 1
+
+        single_task = Checkbutton(frame,text=task_object.name,
+                        foreground=task_object.color,
+                        command=lambda:
+                        self.remove_task(task_object,frame,single_task))
+                        #self.remove_task(single_task,frame,task_ID))
+
         single_task.grid(row=List.num_tasks,column=1)
-        List.task_list.append(task_ID)
+
         #print List.task_list
 
-    def remove_task(self,task,frame,task_ID):
+    def remove_task(self,task_object,frame,task_name):
         List.num_tasks-=1
-        task.grid_forget()
-        List.task_list.remove(task_ID)
-        #print List.task_list
+        task_name.grid_forget()
+        List.task_list.remove(task_object)
+        print List.task_list
 
     def save_tasks(self):
         key_counter = 1
         for item in List.task_list:
             List.task_dict[key_counter]=item
             key_counter += 1
-        #print List.task_dict
+        print List.task_dict
 
         save_file = open(r'listpersist.txt','wb')
         save_file.truncate()
         pickle.dump(List.task_dict,save_file)
         save_file.close()
 
+
     def txt_create(self):
 
         save_file = 'listpersist.txt'
         list_persist = open(save_file, 'a')
         list_persist.close()
-
 
 
 
