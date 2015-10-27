@@ -5,21 +5,20 @@ from datetime import *
 class Task():
 
 
-    def __init__(self,name):
+    def __init__(self,name,gen_date):
 
         self.name = name
-
-        gen_date = False
         self.gen_date = gen_date
-        if not gen_date:
-            self.gen_date = date.today()
-
         self.color = self.color_picker(self.days_on_list())
+
+    def get_gen_date(self):
+
+        print self.gen_date
 
 
     def days_on_list(self):
 
-        today = date.today()
+        today = datetime.today()
         num_days = today - self.gen_date
         print num_days
         return int(num_days.days)

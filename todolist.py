@@ -4,6 +4,7 @@ from Tkinter import *
 import pickle
 import os
 from task import Task
+from datetime import *
 
 class ToDoList(Tk):
 
@@ -11,8 +12,8 @@ class ToDoList(Tk):
     task_list = []
     num_tasks = 0
 
-#The problem appears to be in re-initalizing the tasks see 'try' clause below
     def __init__(self,master):
+
         td_frame = Frame(master)
         td_frame.grid()
         button_frame = Frame(master)
@@ -44,39 +45,42 @@ class ToDoList(Tk):
                              self.save_tasks())
         save_button.grid()
 
-        self.debug_element_printer("__init__")
-    def create_task_object(self,task_ID,frame):
-        #List.num_tasks+=1
+        #self.debug_element_printer("__init__")
 
-        new_task = Task(task_ID)
+    def create_task_object(self,task_ID,frame):
+
+        task_gen_date = datetime.today()
+        new_task = Task(task_ID,task_gen_date)
         self.add_task(new_task,frame)
-        #ToDoList.task_list.append(new_task)
         self.task_list_add(new_task)
-        self.debug_element_printer("create_task_object")
+        #self.debug_element_printer("create_task_object")
 
     def task_list_add(self,task_to_add):
+
         ToDoList.task_list.append(task_to_add)
 
     def add_task(self,task_object,frame):
+
         ToDoList.num_tasks += 1
 
         single_task = Checkbutton(frame,text=task_object.name,
                         foreground=task_object.color,
                         command=lambda:
                         self.remove_task(task_object,frame,single_task))
-                        #self.remove_task(single_task,frame,task_ID))
+
 
         single_task.grid(row=ToDoList.num_tasks,column=1)
-
-        self.debug_element_printer("add_task")
+        #self.debug_element_printer("add_task")
 
     def remove_task(self,task_object,frame,task_name):
+
         ToDoList.num_tasks-=1
         task_name.grid_forget()
         ToDoList.task_list.remove(task_object)
-        self.debug_element_printer("remove_task")
+        #self.debug_element_printer("remove_task")
 
     def save_tasks(self):
+
         key_counter = 0
         for item in ToDoList.task_list:
             ToDoList.task_dict[key_counter]=item
@@ -87,7 +91,7 @@ class ToDoList(Tk):
         save_file.truncate()
         pickle.dump(ToDoList.task_dict,save_file)
         save_file.close()
-        self.debug_element_printer("save_tasks")
+        #self.debug_element_printer("save_tasks")
 
     def txt_create(self):
 
