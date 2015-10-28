@@ -16,7 +16,7 @@ class ToDoList(Tk):
 
         td_frame = Frame(master)
         td_frame.grid()
-        button_frame = Frame(master)
+        button_frame = Frame(td_frame)
         button_frame.grid()
         if not os.path.exists('listpersist.txt'):
             self.txt_create()
@@ -26,7 +26,7 @@ class ToDoList(Tk):
             saved_file.close()
             for key in build_list:
                 value = build_list[key]
-                self.add_task(value,td_frame)
+                self.add_task(value,button_frame)
                 self.task_list_add(value)
         except EOFError:
             print 'no previous save'
@@ -48,7 +48,7 @@ class ToDoList(Tk):
         #self.debug_element_printer("__init__")
 
     def create_task_object(self,task_ID,frame):
-
+        """creates a Task class object and gives it a task generated date."""
         task_gen_date = datetime.today()
         new_task = Task(task_ID,task_gen_date)
         self.add_task(new_task,frame)
@@ -100,6 +100,10 @@ class ToDoList(Tk):
         list_persist.close()
 
     def debug_element_printer(self,function):
+        """I used this function to identify problems with the ToDoList class
+        after I added the Task class. Notice that most of the other functions
+        in ToDoList have a commented out line that makes a call to this
+        function. Not pro-testing at all but it helped me."""
         print "After running {0} the current number of tasks is: {1}".format(function,ToDoList.num_tasks)
         print "--------------------------------"
         print "After running {0} the current task dictionary is: {1}".format(function,ToDoList.task_dict)
